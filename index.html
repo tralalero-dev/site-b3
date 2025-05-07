@@ -99,6 +99,7 @@
             <p>Patrimônio: <span id="patrimonio">R$ 10.000</span></p>
             <button onclick="gerarEvento()">Gerar Evento</button>
             <button onclick="investir()">Investir</button>
+            <button onclick="voltarParaSelecao()">Voltar para Seleção de Nível</button>
             <p>Histórico de Eventos:</p>
             <div id="historico">Nenhum evento ainda.</div>
             <p>Histórico de Explicações:</p>
@@ -448,12 +449,31 @@
         // Iniciar jogo com nível selecionado
         function iniciarJogo(nivelEscolhido) {
             nivel = nivelEscolhido;
+
+            // Resetando valores do jogo
+            dinheiroBanco = 10000;
+            patrimonio = 10000;
+            investimentos = { rendaFixa: 0, rendaVariavel: 0, tesouroDireto: 0, cdb: 0, prefixado: 0, acoes: 0 };
+            
+            // Resetando históricos
+            historicoEventos = [];
+            historicoExplicacoes = [];
+            eventoAtual = null;
+            eventoGerado = false;
+
+            // Atualizando histórico na interface
+            atualizarHistorico();
+            atualizarExplicacao();
+            atualizarHistoricoExplicacoes();
+
+            // Alternar visibilidade das telas
             const telaInicial = document.getElementById('telaInicial');
             const telaJogo = document.getElementById('telaJogo');
             telaInicial.innerHTML = explicacoesIniciais[nivel];
             telaInicial.classList.add('active');
             telaJogo.classList.remove('active');
         }
+
 
         // Começar o jogo após explicação inicial
         function comecarJogo() {
@@ -469,6 +489,30 @@
             eventoAtual = null;
             eventoGerado = false;
             desenharTabuleiro();
+        }
+
+        // Voltar para a seleção de nivel
+        function voltarParaSelecao() {
+            // Resetar os valores do jogo
+            nivel = null;
+            dinheiroBanco = 10000;
+            investimentos = { rendaFixa: 0, rendaVariavel: 0, tesouroDireto: 0, cdb: 0, prefixado: 0, acoes: 0 };
+            historicoEventos = [];
+            historicoExplicacoes = [];
+            eventoAtual = null;
+            eventoGerado = false;
+
+            // Alternar visibilidade das telas corretamente
+            document.getElementById('telaJogo').classList.remove('active');
+            document.getElementById('telaInicial').classList.add('active');
+
+            // Restaurar o conteúdo da tela de seleção de nível
+            document.getElementById('telaInicial').innerHTML = `
+                <h1>Cresça Rico - Escolha o Nível</h1>
+                <p>Escolha um nível para começar. No Nível 1, você aprenderá sobre renda fixa e renda variável. No Nível 2, explorará mais opções de renda fixa e a volatilidade das ações.</p>
+                <button onclick="iniciarJogo(1)">Nível 1: Renda Fixa e Variável</button>
+                <button onclick="iniciarJogo(2)">Nível 2: Renda Fixa Detalhada + Ações</button>
+            `;
         }
 
         // Interação com o mouse
