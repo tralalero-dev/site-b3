@@ -185,6 +185,9 @@
         let eventoAtual = null;
         let eventoGerado = false;
 
+        localStorage.setItem("cupomResgatado", "false"); // Adiciona ou atualiza o par "nome" : "João"
+        let cupomRegatado = localStorage.getItem("cupomResgatado");
+
         // Sprites
         var bancoMalvado = document.getElementById("banco");
         var rendaFixaMalvada = document.getElementById("rendaFixa");
@@ -348,7 +351,15 @@
                 ? investimentos.rendaFixa + investimentos.rendaVariavel 
                 : investimentos.tesouroDireto + investimentos.cdb + investimentos.prefixado + investimentos.acoes;
             patrimonio = dinheiroBanco + totalInvestimentos;
-            document.getElementById('patrimonio').textContent = `R$ ${patrimonio.toFixed(2)}`;
+
+
+            let a = localStorage.getItem("cupomResgatado");                
+            if (patrimonio > 11000 && a === "false"){
+                alert("Parabéns, seu cupom de Investimento foi desbloqueado! Para resgatar, crie uma conta da B3! ")
+                localStorage.setItem("cupomResgatado", "true");
+                window.open("https://tinyurl.com/investir-b3", "_blank");                
+            }
+                document.getElementById('patrimonio').textContent = `R$ ${patrimonio.toFixed(2)}`;
         }
 
         // Atualizar explicação no HTML
